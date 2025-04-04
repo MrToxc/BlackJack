@@ -1,6 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
-
-using BlackJack;
+using BlackJack.legacy;
 
 Console.WriteLine("Hello, World!");
 CardStorage cardStorage = new CardStorage(8);

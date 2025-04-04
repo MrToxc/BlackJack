@@ -1,4 +1,4 @@
-﻿namespace BlackJack;
+﻿namespace BlackJack.legacy;
 
 public class CardStorage
 {

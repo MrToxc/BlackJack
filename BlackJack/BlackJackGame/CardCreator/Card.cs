@@ -11,6 +11,11 @@ public class Card
         this._color = color;
     }
 
+    public char GetCardValue()
+    {
+        return this._cardValue;
+    }
+
     private string GetName()
     {
         string cardName = _cardValue.ToString();

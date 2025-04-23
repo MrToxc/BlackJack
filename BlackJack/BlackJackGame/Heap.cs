@@ -18,7 +18,6 @@ public class Heap
         _heap.Clear();
         _deckCount = deckCount;
         Innit();
-        Shuffle(_heap);
     }
 
     public void AddCard(Card card)
@@ -69,6 +68,7 @@ public class Heap
                 }
             }
         }
+        Shuffle(_heap);
     }
 
     private void Shuffle(List<Card> list)

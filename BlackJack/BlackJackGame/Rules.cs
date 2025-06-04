@@ -23,6 +23,9 @@
         public bool AllowDoubleOnAnyTwo { get; }
         public bool AllowDoubleOn9To11Only { get; }
         public bool AllowDoubleOn10Or11Only { get; }
+        
+        // american/eu
+        public bool IsAmericanStyle { get; }
 
         // --- Penetration ---
         public double DeckPenetration { get; }
@@ -40,6 +43,7 @@
             bool allowDoubleOnAnyTwo,
             bool allowDoubleOn9To11Only,
             bool allowDoubleOn10Or11Only,
+            bool isAmericanStyle,
             double deckPenetration)
         {
             DealerHitsSoft17 = dealerHitsSoft17;
@@ -54,6 +58,7 @@
             AllowDoubleOnAnyTwo = allowDoubleOnAnyTwo;
             AllowDoubleOn9To11Only = allowDoubleOn9To11Only;
             AllowDoubleOn10Or11Only = allowDoubleOn10Or11Only;
+            IsAmericanStyle = isAmericanStyle;
             DeckPenetration = deckPenetration;
         }
     }

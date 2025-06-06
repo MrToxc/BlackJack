@@ -26,7 +26,7 @@ public class Table
     //
     void AddPlayerHand()
     {
-        if (!playing) return;
+        if (!IsPlaying()) return;
         PlayerHands.Add(new Hand());
     }
 
@@ -48,7 +48,7 @@ public class Table
 
     public void DrawCard()
     {
-        if (!playing) return;
+        if (!IsPlaying()) return;
         Card card = Shoe.DrawCard();
         if (card != null)
         {
@@ -63,13 +63,21 @@ public class Table
 
     public Hand GetCurrentHand()
     {
-        
+        IsPlaying();
         return PlayerHands[CurrentHandIndex];
     }
 
     public void Stand()
     {
+        if (!IsPlaying()) return;
         CurrentHandIndex++;
+    }
+
+    public void DoubleDown()
+    {
+        if (!IsPlaying()) return;
+        DrawCard();
+        Stand();
     }
 
     public Card GetDealerCard()
@@ -78,6 +86,23 @@ public class Table
         return card;
     }
     
+
+    public bool IsPlayingRoundOver()
+    {
+        if (PlayerHands.Count > CurrentHandIndex) return false;
+        playing = false;
+        return true;
+
+    }
+
+    private bool IsPlaying()
+    {
+        if (!playing)
+        {
+            throw new Exception("Player is playing after round is over!!!!");
+        }
+        return playing;
+    }
     
     
     

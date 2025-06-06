@@ -6,5 +6,5 @@ CardStorage cardStorage = new CardStorage(8);
 
 for (int i = 0; i < 100; i++)
 {
-    cardStorage.Play(60);
+    cardStorage.Play(50);
 }

@@ -25,6 +25,11 @@ public class Heap
         _heap.Add(card);
     }
 
+    public void ClearDeck()
+    {
+        _heap.Clear();
+    }
+
     public Card? DrawCard()
     {
         if (_heap.Count == 0)

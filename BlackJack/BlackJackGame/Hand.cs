@@ -5,7 +5,8 @@ namespace BlackJack.BlackJackGame;
 public class Hand
 {
     private List<Card> _hand = new List<Card>();
-    public bool IsSplitHand;
+    public bool IsSplitHand = true;
+    //public bool HasStood { get; private set; }
     
     public IReadOnlyList<Card> Cards => _hand;
 

@@ -15,7 +15,7 @@
         private bool _allowDoubleOnAnyTwo = true;
         private bool _allowDoubleOn9To11Only = false;
         private bool _allowDoubleOn10Or11Only = false;
-        private bool _isAmericanStyle = true;
+        private int _deckCount = 8;
         private double _deckPenetration = 0.75;
 
         // --- Fluent setters ---
@@ -32,7 +32,7 @@
         public RulesBuilder SetAllowDoubleOn9To11Only(bool value) => Set(ref _allowDoubleOn9To11Only, value);
         public RulesBuilder SetAllowDoubleOn10Or11Only(bool value) => Set(ref _allowDoubleOn10Or11Only, value);
         
-        public RulesBuilder SetAmericanStyle(bool value) => Set(ref _isAmericanStyle, value);
+        public RulesBuilder SetAmericanStyle(int value) => Set(ref _deckCount, value);
         public RulesBuilder SetDeckPenetration(double value) => Set(ref _deckPenetration, value);
 
         // --- Generic setter helper ---
@@ -75,7 +75,7 @@
                 _allowDoubleOnAnyTwo,
                 _allowDoubleOn9To11Only,
                 _allowDoubleOn10Or11Only,
-                _isAmericanStyle,
+                _deckCount,
                 _deckPenetration
             );
         }

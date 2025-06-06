@@ -4,7 +4,7 @@ namespace BlackJack.BlackJackGame;
 
 public class Heap
 {
-    private List<Card> _heap = new List<Card>();
+    private List<Card?> _heap = new List<Card?>();
     private int _deckCount;
     private static Random _rng = new Random();
     
@@ -20,7 +20,7 @@ public class Heap
         Innit();
     }
 
-    public void AddCard(Card card)
+    public void AddCard(Card? card)
     {
         _heap.Add(card);
     }
@@ -76,7 +76,7 @@ public class Heap
         Shuffle(_heap);
     }
 
-    private void Shuffle(List<Card> list)
+    private void Shuffle(List<Card?> list)
     {
         int n = list.Count;
         for (int i = n - 1; i > 0; i--)

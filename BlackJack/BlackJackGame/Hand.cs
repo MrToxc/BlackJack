@@ -4,14 +4,14 @@ namespace BlackJack.BlackJackGame;
 
 public class Hand
 {
-    private List<Card> _hand = new List<Card>();
+    private List<Card?> _hand = new List<Card?>();
     public bool IsSplitHand = true;
     //public bool HasStood { get; private set; }
     
-    public IReadOnlyList<Card> Cards => _hand;
+    public IReadOnlyList<Card?> Cards => _hand;
 
     
-    public void AddCard(Card card)
+    public void AddCard(Card? card)
     {
         if (GetValue() > 21)
         {
@@ -20,13 +20,13 @@ public class Hand
         _hand.Add(card);
     }
 
-    public Card RemoveCard()
+    public Card? RemoveCard()
     {
         if (_hand.Count != 2)
         {
             throw new InvalidOperationException("Cannot remove card from hand. Number of cards must be 2");
         }
-        Card card = _hand[1];
+        Card? card = _hand[1];
         _hand.RemoveAt(1);
         return card;
     }
@@ -62,6 +62,11 @@ public class Hand
         }
 
         return total;
+    }
+
+    public void ClearHand()
+    {
+        _hand.Clear();
     }
 
     

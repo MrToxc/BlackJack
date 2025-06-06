@@ -12,6 +12,7 @@
         private bool _allowHitSplitAces = true;
         private bool _allowEarlySurrender = false;
         private bool _allowLateSurrender = true;
+        private bool _allowInsurance = true;
         private bool _allowDoubleOnAnyTwo = true;
         private bool _allowDoubleOn9To11Only = false;
         private bool _allowDoubleOn10Or11Only = false;
@@ -32,7 +33,7 @@
         public RulesBuilder SetAllowDoubleOn9To11Only(bool value) => Set(ref _allowDoubleOn9To11Only, value);
         public RulesBuilder SetAllowDoubleOn10Or11Only(bool value) => Set(ref _allowDoubleOn10Or11Only, value);
         
-        public RulesBuilder SetAmericanStyle(int value) => Set(ref _deckCount, value);
+        public RulesBuilder SetDeckCount(int value) => Set(ref _deckCount, value);
         public RulesBuilder SetDeckPenetration(double value) => Set(ref _deckPenetration, value);
 
         // --- Generic setter helper ---
@@ -72,6 +73,7 @@
                 _allowHitSplitAces,
                 _allowEarlySurrender,
                 _allowLateSurrender,
+                _allowInsurance,
                 _allowDoubleOnAnyTwo,
                 _allowDoubleOn9To11Only,
                 _allowDoubleOn10Or11Only,

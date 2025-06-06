@@ -18,6 +18,7 @@
         // --- Surrender rules ---
         public bool AllowEarlySurrender { get; }
         public bool AllowLateSurrender { get; }
+        public bool AllowInsurance { get; }
 
         // --- Doubling rules ---
         public bool AllowDoubleOnAnyTwo { get; }
@@ -39,6 +40,7 @@
             bool allowHitSplitAces,
             bool allowEarlySurrender,
             bool allowLateSurrender,
+            bool allowInsurance,
             bool allowDoubleOnAnyTwo,
             bool allowDoubleOn9To11Only,
             bool allowDoubleOn10Or11Only, 
@@ -55,6 +57,7 @@
             AllowEarlySurrender = allowEarlySurrender;
             AllowLateSurrender = allowLateSurrender;
             AllowDoubleOnAnyTwo = allowDoubleOnAnyTwo;
+            AllowInsurance = allowInsurance;
             AllowDoubleOn9To11Only = allowDoubleOn9To11Only;
             AllowDoubleOn10Or11Only = allowDoubleOn10Or11Only;
             DeckCount = deckCount;

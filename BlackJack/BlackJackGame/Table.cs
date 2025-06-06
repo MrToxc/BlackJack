@@ -4,36 +4,51 @@ namespace BlackJack.BlackJackGame;
 
 public class Table
 {
-    private Hand DealerHand { get; }
-    List<Hand> PlayerHands { get; }
-    private int CurrentHandIndex = 0; 
-    private Heap Shoe;
-    private Heap Burned { get; }
-    public Rules rules { get; }
+    private Hand DealerHand { get; }      = new Hand();
+    private List<Hand>? PlayerHands { get; } = new List<Hand>();
+    private Heap Shoe           { get; } = new Heap();
+    private Heap Burned         { get; } = new Heap();
+    public  Rules Rules         { get; }
 
+    private int _currentHandIndex = 0;
+    private bool _playing = true;
+    private Card? _hiddenCard;
 
-    private bool playing = true;
+    public Table(Rules rules)
+    {
+        this.Rules = rules;
+        Initialize();
+    }
 
 
     // START / END of shoe
     public void Initialize()
     {
-        Shoe.ToDrawPile(rules.DeckCount);
+        EndRound();
+        Shoe.ToDrawPile(Rules.DeckCount);
         Burned.ClearDeck();
         PlayerHands.Clear();
     }
 
     //
-    void AddPlayerHand()
+    public void AddPlayerHand()
     {
         if (!IsPlaying()) return;
         PlayerHands.Add(new Hand());
     }
 
+    public void DealerInitializeHand()
+    {
+        Card? faceCard = Shoe.DrawCard();
+        DealerHand.AddCard(faceCard);
+        Burned.AddCard(faceCard);
+        _hiddenCard = Shoe.DrawCard();
+        DealerHand.AddCard(_hiddenCard);
+    }
     public Hand DealerDrawCard()
     {
-        playing = false;
-        Card card = Shoe.DrawCard();
+        _playing = false;
+        Card? card = Shoe.DrawCard();
         Burned.AddCard(card);
         DealerHand.AddCard(card);
         return DealerHand;
@@ -41,19 +56,26 @@ public class Table
     
     public void EndRound()
     {
+        if (_hiddenCard != null)
+        {
+            Burned.AddCard(_hiddenCard);
+            Console.WriteLine("hidden card is null");
+        }
+        _hiddenCard = null;
         PlayerHands.Clear();
-        CurrentHandIndex = 0;
-        playing = true;
+        DealerHand.ClearHand();
+        _currentHandIndex = 0;
+        _playing = true;
     }
 
     public void DrawCard()
     {
         if (!IsPlaying()) return;
-        Card card = Shoe.DrawCard();
+        Card? card = Shoe.DrawCard();
         if (card != null)
         {
             Burned.AddCard(card);
-            PlayerHands[CurrentHandIndex].AddCard(card);
+            PlayerHands[_currentHandIndex].AddCard(card);
         }
         else
         {
@@ -64,13 +86,13 @@ public class Table
     public Hand GetCurrentHand()
     {
         IsPlaying();
-        return PlayerHands[CurrentHandIndex];
+        return PlayerHands[_currentHandIndex];
     }
 
     public void Stand()
     {
         if (!IsPlaying()) return;
-        CurrentHandIndex++;
+        _currentHandIndex++;
     }
 
     public void DoubleDown()
@@ -80,29 +102,61 @@ public class Table
         Stand();
     }
 
-    public Card GetDealerCard()
+    public void Split()
     {
-        Card card = DealerHand.Cards[0];
+        if (!IsPlaying()) return;
+        
+        var cardToSplit = PlayerHands[_currentHandIndex].RemoveCard();
+        AddPlayerHand();
+        PlayerHands[PlayerHands.Count - 1].AddCard(cardToSplit);
+    }
+
+    public Card? GetDealerCard()
+    {
+        Card? card = DealerHand.Cards[0];
         return card;
     }
     
 
     public bool IsPlayingRoundOver()
     {
-        if (PlayerHands.Count > CurrentHandIndex) return false;
-        playing = false;
+        if (PlayerHands.Count > _currentHandIndex) return false;
+        _playing = false;
         return true;
+    }
 
+    public List<Hand>? GetPlayerHands()
+    {
+        return PlayerHands;
+    }
+
+    public List<Hand>? Insure()
+    {
+        if (!Rules.AllowInsurance)
+        {
+            Console.WriteLine("Insurance is not allowed");
+            return null;
+        }
+
+        if (DealerHand.GetValue() == 21)
+        {
+            var playerHands = GetPlayerHands();
+            EndRound();
+            return playerHands;
+        }
+        return null;
     }
 
     private bool IsPlaying()
     {
-        if (!playing)
+        if (!_playing)
         {
             throw new Exception("Player is playing after round is over!!!!");
         }
-        return playing;
+        return _playing;
     }
+    
+    
     
     
     

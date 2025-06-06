@@ -5,12 +5,16 @@ namespace BlackJack.BlackJackGame;
 public class Hand
 {
     private List<Card?> _hand = new List<Card?>();
-    public bool IsSplitHand = true;
+    public bool IsSplitHand;
     //public bool HasStood { get; private set; }
     
     public IReadOnlyList<Card?> Cards => _hand;
 
-    
+    public Hand(bool isSplitHand)
+    {
+        IsSplitHand = isSplitHand;
+    }
+
     public void AddCard(Card? card)
     {
         if (GetValue() > 21)

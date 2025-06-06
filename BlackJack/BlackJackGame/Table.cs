@@ -4,7 +4,7 @@ namespace BlackJack.BlackJackGame;
 
 public class Table
 {
-    private Hand DealerHand { get; }      = new Hand();
+    private Hand DealerHand { get; }      = new Hand(false);
     private List<Hand>? PlayerHands { get; } = new List<Hand>();
     private Heap Shoe           { get; } = new Heap();
     private Heap Burned         { get; } = new Heap();
@@ -17,12 +17,12 @@ public class Table
     public Table(Rules rules)
     {
         this.Rules = rules;
-        Initialize();
+        InitializeRound();
     }
 
 
     // START / END of shoe
-    public void Initialize()
+    public void InitializeRound()
     {
         EndRound();
         Shoe.ToDrawPile(Rules.DeckCount);
@@ -31,19 +31,24 @@ public class Table
     }
 
     //
-    public void AddPlayerHand()
+    public void AddPlayerHand(bool isSplitHand)
     {
         if (!IsPlaying()) return;
-        PlayerHands.Add(new Hand());
+        PlayerHands.Add(new Hand(isSplitHand));
     }
 
-    public void DealerInitializeHand()
+    public void InitializeHands()
     {
         Card? faceCard = Shoe.DrawCard();
         DealerHand.AddCard(faceCard);
         Burned.AddCard(faceCard);
         _hiddenCard = Shoe.DrawCard();
         DealerHand.AddCard(_hiddenCard);
+        
+        AddPlayerHand(false);
+        DrawCardPlayer();
+        DrawCardPlayer();
+        
     }
     public Hand DealerDrawCard()
     {
@@ -68,7 +73,7 @@ public class Table
         _playing = true;
     }
 
-    public void DrawCard()
+    public void DrawCardPlayer()
     {
         if (!IsPlaying()) return;
         Card? card = Shoe.DrawCard();
@@ -98,7 +103,7 @@ public class Table
     public void DoubleDown()
     {
         if (!IsPlaying()) return;
-        DrawCard();
+        DrawCardPlayer();
         Stand();
     }
 
@@ -107,7 +112,7 @@ public class Table
         if (!IsPlaying()) return;
         
         var cardToSplit = PlayerHands[_currentHandIndex].RemoveCard();
-        AddPlayerHand();
+        AddPlayerHand(true);
         PlayerHands[PlayerHands.Count - 1].AddCard(cardToSplit);
     }
 
@@ -123,6 +128,15 @@ public class Table
         if (PlayerHands.Count > _currentHandIndex) return false;
         _playing = false;
         return true;
+    }
+
+    public bool ShouldShuffle()
+    {
+        if (Burned.GetDeckCount() > (Rules.DeckCount*52) * Rules.DeckPenetration)
+        {
+            return true;
+        }
+        return false;
     }
 
     public List<Hand>? GetPlayerHands()

@@ -20,7 +20,7 @@ public class Dealer
     }
 
     
-    public double PlayHand(double betAmount)
+    public double PlayRound(double betAmount)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(betAmount);
         _payoutAmount = 0;
@@ -39,16 +39,6 @@ public class Dealer
         DealerDrawCards();
         PayOut();
         _table.EndRound();
-        
-        
-        
-        
-        
-        
-
-        
-        
-        
         return _payoutAmount;
     }
 
@@ -108,7 +98,7 @@ public class Dealer
                 _table.RemoveCurrnetHand();
                 continue;
             }
-            foreach (var action in _player.DecideAction(_table))
+            foreach (var action in _player.DecideAction())
             {
                 if (IsPossible(action))
                 {

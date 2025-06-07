@@ -64,7 +64,6 @@ public class Table
         if (_hiddenCard != null)
         {
             Burned.AddCard(_hiddenCard);
-            Console.WriteLine("hidden card is null");
         }
         _hiddenCard = null;
         PlayerHands.Clear();

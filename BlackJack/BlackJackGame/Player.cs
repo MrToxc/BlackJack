@@ -2,10 +2,22 @@
 
 public class Player
 {
-    
-    public List<Actions> DecideAction(Table table)
+    private Table _table;
+    private IStrategy _strategy;
+
+    public Player(Table table, IStrategy strategy)
     {
-        table.GetCurrentHand();
-        return null;
+        _table = table;
+        _strategy = strategy;
+    }
+
+    public List<Actions> DecideAction()
+    {
+        return _strategy.DecideHand(_table);
+    }
+
+    public double DecideBet()
+    {
+        return _strategy.DecideBet(_table);
     }
 }

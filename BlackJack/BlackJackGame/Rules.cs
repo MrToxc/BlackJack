@@ -16,7 +16,7 @@
         public bool AllowHitSplitAces { get; }
 
         // --- Surrender rules ---
-        public bool AllowEarlySurrender { get; }
+        //public bool AllowEarlySurrender { get; }
         public bool AllowLateSurrender { get; }
         public bool AllowInsurance { get; }
 
@@ -38,7 +38,7 @@
             bool allowDoubleAfterSplit,
             bool allowResplitAces,
             bool allowHitSplitAces,
-            bool allowEarlySurrender,
+            //bool allowEarlySurrender,
             bool allowLateSurrender,
             bool allowInsurance,
             bool allowDoubleOnAnyTwo,
@@ -54,7 +54,7 @@
             AllowDoubleAfterSplit = allowDoubleAfterSplit;
             AllowResplitAces = allowResplitAces;
             AllowHitSplitAces = allowHitSplitAces;
-            AllowEarlySurrender = allowEarlySurrender;
+            //AllowEarlySurrender = allowEarlySurrender;
             AllowLateSurrender = allowLateSurrender;
             AllowDoubleOnAnyTwo = allowDoubleOnAnyTwo;
             AllowInsurance = allowInsurance;

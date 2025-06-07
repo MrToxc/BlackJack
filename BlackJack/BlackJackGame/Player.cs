@@ -2,12 +2,10 @@
 
 public class Player
 {
-
     
-
-    public static List<Actions> DecideAction(Table table)
+    public List<Actions> DecideAction(Table table)
     {
-        
+        table.GetCurrentHand();
         return null;
     }
 }

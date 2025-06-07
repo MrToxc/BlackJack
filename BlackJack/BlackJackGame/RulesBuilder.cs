@@ -10,7 +10,7 @@
         private bool _allowDoubleAfterSplit = true;
         private bool _allowResplitAces = true;
         private bool _allowHitSplitAces = true;
-        private bool _allowEarlySurrender = false;
+        //private bool _allowEarlySurrender = false;
         private bool _allowLateSurrender = true;
         private bool _allowInsurance = true;
         private bool _allowDoubleOnAnyTwo = true;
@@ -27,7 +27,7 @@
         public RulesBuilder SetAllowDoubleAfterSplit(bool value) => Set(ref _allowDoubleAfterSplit, value);
         public RulesBuilder SetAllowResplitAces(bool value) => Set(ref _allowResplitAces, value);
         public RulesBuilder SetAllowHitSplitAces(bool value) => Set(ref _allowHitSplitAces, value);
-        public RulesBuilder SetAllowEarlySurrender(bool value) => Set(ref _allowEarlySurrender, value);
+        //public RulesBuilder SetAllowEarlySurrender(bool value) => Set(ref _allowEarlySurrender, value);
         public RulesBuilder SetAllowLateSurrender(bool value) => Set(ref _allowLateSurrender, value);
         public RulesBuilder SetAllowDoubleOnAnyTwo(bool value) => Set(ref _allowDoubleOnAnyTwo, value);
         public RulesBuilder SetAllowDoubleOn9To11Only(bool value) => Set(ref _allowDoubleOn9To11Only, value);
@@ -54,11 +54,7 @@
 
             if (doubleRulesEnabled > 1)
                 throw new InvalidOperationException("Only one of the double rules can be enabled at a time.");
-
-            // --- Surrender conflict check ---
-            if (_allowEarlySurrender && _allowLateSurrender)
-                throw new InvalidOperationException("Cannot allow both early and late surrender at the same time.");
-
+            
             // --- Penetration value check ---
             if (_deckPenetration <= 0.0 || _deckPenetration > 1.0)
                 throw new InvalidOperationException("DeckPenetration must be greater than 0.0 and less than or equal to 1.0.");
@@ -71,7 +67,7 @@
                 _allowDoubleAfterSplit,
                 _allowResplitAces,
                 _allowHitSplitAces,
-                _allowEarlySurrender,
+                //_allowEarlySurrender,
                 _allowLateSurrender,
                 _allowInsurance,
                 _allowDoubleOnAnyTwo,

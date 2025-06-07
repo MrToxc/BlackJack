@@ -17,12 +17,12 @@ public class Table
     public Table(Rules rules)
     {
         this.Rules = rules;
-        InitializeRound();
+        InitializeShoe();
     }
 
 
     // START / END of shoe
-    public void InitializeRound()
+    public void InitializeShoe()
     {
         EndRound();
         Shoe.ToDrawPile(Rules.DeckCount);
@@ -104,6 +104,7 @@ public class Table
     {
         if (!IsPlaying()) return;
         DrawCardPlayer();
+        GetCurrentHand().DoubleDown();
         Stand();
     }
 
@@ -112,16 +113,40 @@ public class Table
         if (!IsPlaying()) return;
         
         var cardToSplit = PlayerHands[_currentHandIndex].RemoveCard();
+        PlayerHands[_currentHandIndex].IsSplitHand = true;
         AddPlayerHand(true);
         PlayerHands[PlayerHands.Count - 1].AddCard(cardToSplit);
     }
+
+    public void RemoveCurrnetHand()
+    {
+        if (!IsPlaying()) return;
+        PlayerHands.RemoveAt(_currentHandIndex);
+    }
+    
+    
 
     public Card? GetDealerCard()
     {
         Card? card = DealerHand.Cards[0];
         return card;
     }
-    
+
+    public int GetDealerHandValue()
+    {
+        if (IsPlaying()) throw new Exception("Cannot get DealerHand when you are playing you cheater!!");
+        return DealerHand.GetValue();
+    }
+
+    public bool IsDealerHandSoft()
+    {
+        return DealerHand.IsSoft();
+    }
+
+    public bool IsDealerHandBusted()
+    {
+        return DealerHand.IsBusted();
+    }
 
     public bool IsPlayingRoundOver()
     {
@@ -169,10 +194,4 @@ public class Table
         }
         return _playing;
     }
-    
-    
-    
-    
-    
-    
 }

@@ -6,6 +6,8 @@ public class Hand
 {
     private List<Card?> _hand = new List<Card?>();
     public bool IsSplitHand;
+
+    public bool isDoubledDown;
     //public bool HasStood { get; private set; }
     
     public IReadOnlyList<Card?> Cards => _hand;
@@ -169,5 +171,10 @@ public class Hand
     public bool HasTwoCards()
     {
         return _hand.Count == 2;
+    }
+
+    public void DoubleDown()
+    {
+        isDoubledDown = true;
     }
 }

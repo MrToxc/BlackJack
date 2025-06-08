@@ -4,19 +4,21 @@ namespace BlackJack.BlackJackGame;
 
 public class Table
 {
-    private Hand DealerHand { get; }      = new Hand(false);
-    private List<Hand>? PlayerHands { get; } = new List<Hand>();
-    private Heap Shoe           { get; } = new Heap();
-    private Heap Burned         { get; } = new Heap();
-    public  Rules Rules         { get; }
+    private readonly Hand _dealerHand = new(false);
 
-    private int _currentHandIndex = 0;
+    private readonly List<Hand> _playerHands = new();
+    
+    private readonly Heap _shoe = new();
+    private readonly Heap _burned = new();
+    public readonly Rules Rules;
+
+    private int _currentHandIndex;
     private bool _playing = true;
     private Card? _hiddenCard;
 
     public Table(Rules rules)
     {
-        this.Rules = rules;
+        Rules = rules;
         InitializeShoe();
     }
 
@@ -24,26 +26,33 @@ public class Table
     // START / END of shoe
     public void InitializeShoe()
     {
+        Console.WriteLine("Initializing Shoe");
         EndRound();
-        Shoe.ToDrawPile(Rules.DeckCount);
-        Burned.ClearDeck();
-        PlayerHands.Clear();
+        _shoe.ToDrawPile(Rules.DeckCount);
+        _burned.ClearDeck();
+        _playerHands.Clear();
     }
 
     //
-    public void AddPlayerHand(bool isSplitHand)
+    private void AddPlayerHand(bool isSplitHand)
     {
         if (!IsPlaying()) return;
-        PlayerHands.Add(new Hand(isSplitHand));
+        _playerHands.Add(new Hand(isSplitHand));
     }
 
     public void InitializeHands()
     {
-        Card? faceCard = Shoe.DrawCard();
-        DealerHand.AddCard(faceCard);
-        Burned.AddCard(faceCard);
-        _hiddenCard = Shoe.DrawCard();
-        DealerHand.AddCard(_hiddenCard);
+        Card faceCard = _shoe.DrawCard();
+        _dealerHand.AddCard(faceCard);
+        _burned.AddCard(faceCard);
+        _hiddenCard = _shoe.DrawCard();
+        
+        foreach (var variable in _dealerHand.Cards)
+        {
+            Console.WriteLine(variable.GetCardValue());
+        }
+        Console.WriteLine(_hiddenCard.GetCardValue());
+        _dealerHand.AddCard(_hiddenCard);
         
         AddPlayerHand(false);
         DrawCardPlayer();
@@ -53,21 +62,21 @@ public class Table
     public Hand DealerDrawCard()
     {
         _playing = false;
-        Card? card = Shoe.DrawCard();
-        Burned.AddCard(card);
-        DealerHand.AddCard(card);
-        return DealerHand;
+        Card card = _shoe.DrawCard();
+        _burned.AddCard(card);
+        _dealerHand.AddCard(card);
+        return _dealerHand;
     }
     
     public void EndRound()
     {
         if (_hiddenCard != null)
         {
-            Burned.AddCard(_hiddenCard);
+            _burned.AddCard(_hiddenCard);
         }
         _hiddenCard = null;
-        PlayerHands.Clear();
-        DealerHand.ClearHand();
+        _playerHands.Clear();
+        _dealerHand.ClearHand();
         _currentHandIndex = 0;
         _playing = true;
     }
@@ -75,22 +84,15 @@ public class Table
     public void DrawCardPlayer()
     {
         if (!IsPlaying()) return;
-        Card? card = Shoe.DrawCard();
-        if (card != null)
-        {
-            Burned.AddCard(card);
-            PlayerHands[_currentHandIndex].AddCard(card);
-        }
-        else
-        {
-            throw new NullReferenceException("Cannot draw card");
-        }
+        Card card = _shoe.DrawCard();
+        _burned.AddCard(card);
+        _playerHands[_currentHandIndex].AddCard(card);
     }
 
     public Hand GetCurrentHand()
     {
         IsPlaying();
-        return PlayerHands[_currentHandIndex];
+        return _playerHands[_currentHandIndex];
     }
 
     public void Stand()
@@ -111,63 +113,60 @@ public class Table
     {
         if (!IsPlaying()) return;
         
-        var cardToSplit = PlayerHands[_currentHandIndex].RemoveCard();
-        PlayerHands[_currentHandIndex].IsSplitHand = true;
+        var cardToSplit = _playerHands[_currentHandIndex].RemoveCard();
+        _playerHands[_currentHandIndex].IsSplitHand = true;
         AddPlayerHand(true);
-        PlayerHands[PlayerHands.Count - 1].AddCard(cardToSplit);
+        _playerHands[^1].AddCard(cardToSplit);
     }
 
     public void RemoveCurrnetHand()
     {
         if (!IsPlaying()) return;
-        PlayerHands.RemoveAt(_currentHandIndex);
+        _playerHands.RemoveAt(_currentHandIndex);
     }
     
     
 
-    public Card? GetDealerCard()
+    public Card GetDealerCard()
     {
-        Card? card = DealerHand.Cards[0];
+        Card card = _dealerHand.Cards[0];
         return card;
     }
 
     public int GetDealerHandValue()
     {
         if (IsPlaying()) throw new Exception("Cannot get DealerHand when you are playing you cheater!!");
-        return DealerHand.GetValue();
+        return _dealerHand.GetValue();
     }
 
     public bool IsDealerHandSoft()
     {
-        return DealerHand.IsSoft();
+        return _dealerHand.IsSoft();
     }
 
     public bool IsDealerHandBusted()
     {
-        return DealerHand.IsBusted();
+        return _dealerHand.IsBusted();
     }
 
     public bool IsPlayingRoundOver()
     {
-        if (PlayerHands.Count > _currentHandIndex) return false;
+        if (_playerHands.Count > _currentHandIndex) return false;
         _playing = false;
         return true;
     }
 
     public bool ShouldShuffle()
     {
-        if (Burned.GetDeckCount() > (Rules.DeckCount*52) * Rules.DeckPenetration)
-        {
-            return true;
-        }
-        return false;
+        return _burned.Count > (Rules.DeckCount*52) * Rules.DeckPenetration;
     }
 
-    public List<Hand>? GetPlayerHands()
+    public List<Hand> GetPlayerHands()
     {
-        return PlayerHands;
+        return _playerHands;
     }
 
+    /*
     public List<Hand>? Insure()
     {
         if (!Rules.AllowInsurance)
@@ -176,7 +175,7 @@ public class Table
             return null;
         }
 
-        if (DealerHand.GetValue() == 21)
+        if (_dealerHand.GetValue() == 21)
         {
             var playerHands = GetPlayerHands();
             EndRound();
@@ -184,13 +183,10 @@ public class Table
         }
         return null;
     }
+    */
 
     private bool IsPlaying()
     {
-        if (!_playing)
-        {
-            throw new Exception("Player is playing after round is over!!!!");
-        }
         return _playing;
     }
 }

@@ -1,25 +1,11 @@
-﻿using System.Diagnostics;
+﻿namespace BlackJack.BlackJackGame;
 
-namespace BlackJack.BlackJackGame;
-
-public class Dealer
+public class Dealer(Table table, Player player)
 {
-    private Table _table ;
-    private bool _stopPlaying = false;
-    private Rules _rules;
-    private double _betAmount = 0;
-    private double _payoutAmount = 0;
-    private Player _player;
-    
+    private readonly Rules _rules = table.Rules;
+    private double _betAmount;
+    private double _payoutAmount;
 
-    public Dealer(Rules rules, Player player)
-    {
-        _rules = rules;
-        _table = new Table(rules);
-        _player = player;
-    }
-
-    
     public double PlayRound(double betAmount)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(betAmount);
@@ -27,9 +13,10 @@ public class Dealer
         
         _betAmount = betAmount;
         
-        if (_table.ShouldShuffle()) _table.InitializeShoe();
-        _table.InitializeHands();
-        if (_table.GetCurrentHand().IsBlackJack())
+        if (table.ShouldShuffle()) table.InitializeShoe();
+        table.EndRound();
+        table.InitializeHands();
+        if (table.GetCurrentHand().IsBlackJack())
         {
             BlackJack();
             return _payoutAmount;
@@ -38,30 +25,30 @@ public class Dealer
         PlayHands();
         DealerDrawCards();
         PayOut();
-        _table.EndRound();
+        table.EndRound();
         return _payoutAmount;
     }
 
     private void PayOut()
     {
-        int dealerValue = _table.GetDealerHandValue();
-        bool dealerBusted = _table.IsDealerHandBusted();
+        var dealerValue = table.GetDealerHandValue();
+        var dealerBusted = table.IsDealerHandBusted();
 
-        foreach (var playerHand in _table.GetPlayerHands())
+        foreach (var playerHand in table.GetPlayerHands())
         {
             int playerValue = playerHand.GetValue();
 
             if (dealerBusted)
             {
-                Win(playerHand.isDoubledDown);
+                Win(playerHand.IsDoubledDown);
             }
             else if (playerValue > dealerValue)
             {
-                Win(playerHand.isDoubledDown);
+                Win(playerHand.IsDoubledDown);
             }
             else if (playerValue < dealerValue)
             {
-                Lose(playerHand.isDoubledDown);
+                Lose(playerHand.IsDoubledDown);
             }
             else
             {
@@ -75,12 +62,12 @@ public class Dealer
     {
         while (true)
         {
-            int value = _table.GetDealerHandValue();
-            bool isSoft = _table.IsDealerHandSoft();
+            int value = table.GetDealerHandValue();
+            bool isSoft = table.IsDealerHandSoft();
 
             if (value < 17 || (value == 17 && isSoft && _rules.DealerHitsSoft17))
             {
-                _table.DealerDrawCard();
+                table.DealerDrawCard();
                 continue;
             }
             break;
@@ -90,15 +77,15 @@ public class Dealer
 
     private void PlayHands()
     {
-        while (!_table.IsPlayingRoundOver())
+        while (!table.IsPlayingRoundOver())
         {
-            if (_table.GetCurrentHand().IsBusted())
+            if (table.GetCurrentHand().IsBusted())
             {
-                Lose(_table.GetCurrentHand().isDoubledDown);
-                _table.RemoveCurrnetHand();
+                Lose(table.GetCurrentHand().IsDoubledDown);
+                table.RemoveCurrnetHand();
                 continue;
             }
-            foreach (var action in _player.DecideAction())
+            foreach (var action in player.DecideAction())
             {
                 if (IsPossible(action))
                 {
@@ -159,7 +146,7 @@ public class Dealer
     {
         if (action is Actions.Hit or Actions.Stand) return true;
         
-        if (!_table.GetCurrentHand().HasTwoCards()) return false;
+        if (!table.GetCurrentHand().HasTwoCards()) return false;
 
         if (action is Actions.Double)
         {
@@ -169,45 +156,45 @@ public class Dealer
             }
 
             if (_rules.AllowDoubleOn9To11Only 
-                && _table.GetCurrentHand().GetValue() >= 9 
-                && _table.GetCurrentHand().GetValue() <= 11)
+                && table.GetCurrentHand().GetValue() >= 9 
+                && table.GetCurrentHand().GetValue() <= 11)
             {
                 return true;
             }
 
             return _rules.AllowDoubleOn10Or11Only
-                   && _table.GetCurrentHand().GetValue() >= 10
-                   && _table.GetCurrentHand().GetValue() <= 11;
+                   && table.GetCurrentHand().GetValue() >= 10
+                   && table.GetCurrentHand().GetValue() <= 11;
         }
         if (action is Actions.Surrender && _rules.AllowLateSurrender) return true;
-        if (action is Actions.Split && _table.GetCurrentHand().CanSplit()) return true;
+        if (action is Actions.Split && table.GetCurrentHand().CanSplit()) return true;
         throw new Exception("Invalid action");
     }
     
     //Game options
     private void Hit()
     {
-        _table.DrawCardPlayer();
+        table.DrawCardPlayer();
     }
 
     private void Stand()
     {
-        _table.Stand();
+        table.Stand();
     }
 
     private void DoubleDown()
     {
-        _table.DoubleDown();
+        table.DoubleDown();
     }
 
     private void Split()
     {
-        _table.Split();
+        table.Split();
     }
 
     private void Surrender()
     {
-        _table.RemoveCurrnetHand();
+        table.RemoveCurrnetHand();
         _payoutAmount += (_betAmount / 2) * -1;
     }
     

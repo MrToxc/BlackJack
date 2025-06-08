@@ -3,7 +3,7 @@
     public class RulesBuilder
     {
         // --- Default values ---
-        private bool _dealerHitsSoft17 = false;
+        private bool _dealerHitsSoft17;
         private bool _dealerPeeksForBlackjack = true;
         private double _blackjackPayout = 1.5;
         private int _maxSplits = 3;
@@ -14,10 +14,10 @@
         private bool _allowLateSurrender = true;
         private bool _allowInsurance = true;
         private bool _allowDoubleOnAnyTwo = true;
-        private bool _allowDoubleOn9To11Only = false;
-        private bool _allowDoubleOn10Or11Only = false;
-        private int _deckCount = 8;
-        private double _deckPenetration = 0.75;
+        private bool _allowDoubleOn9To11Only;
+        private bool _allowDoubleOn10Or11Only;
+        private int _deckCount = 2;
+        private double _deckPenetration = 0.5;
 
         // --- Fluent setters ---
         public RulesBuilder SetDealerHitsSoft17(bool value) => Set(ref _dealerHitsSoft17, value);

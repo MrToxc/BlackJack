@@ -2,13 +2,13 @@
 
 public class Card
 {
-    private char _cardValue;
-    private Color _color;
+    private readonly char _cardValue;
+    private readonly Color _color;
 
     public Card(char cardValue, Color color)
     {
-        this._cardValue = cardValue;
-        this._color = color;
+        _cardValue = cardValue;
+        _color = color;
     }
 
     public char GetCardValue()
@@ -16,10 +16,12 @@ public class Card
         return this._cardValue;
     }
 
-    private string GetName()
+    public override string ToString()
     {
         string cardName = _cardValue.ToString();
         cardName += _color.ToShortString();
         return cardName;
     }
+    
+    
 }

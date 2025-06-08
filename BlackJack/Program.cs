@@ -1,10 +1,10 @@
-﻿// See https://aka.ms/new-console-template for more information
-using BlackJack.legacy;
+﻿using BlackJack.BlackJackGame;
+using BlackJack.BlackJackGame.Strategies;
 
-Console.WriteLine("Hello, World!");
-CardStorage cardStorage = new CardStorage(8);
+var rules   = new RulesBuilder().Build();
+var table   = new Table(rules);
+var player  = new Player(table, new BasicStrategy());
+var dealer  = new Dealer(table, player);
+var manager = new GameManager(dealer);
 
-for (int i = 0; i < 100; i++)
-{
-    cardStorage.Play(50);
-}
+Console.WriteLine(manager.Test());

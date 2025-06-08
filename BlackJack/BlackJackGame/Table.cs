@@ -46,12 +46,6 @@ public class Table
         _dealerHand.AddCard(faceCard);
         _burned.AddCard(faceCard);
         _hiddenCard = _shoe.DrawCard();
-        
-        foreach (var variable in _dealerHand.Cards)
-        {
-            Console.WriteLine(variable.GetCardValue());
-        }
-        Console.WriteLine(_hiddenCard.GetCardValue());
         _dealerHand.AddCard(_hiddenCard);
         
         AddPlayerHand(false);

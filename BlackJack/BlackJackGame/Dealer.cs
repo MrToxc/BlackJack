@@ -6,8 +6,9 @@ public class Dealer(Table table, Player player)
     private double _betAmount;
     private double _payoutAmount;
 
-    public double PlayRound(double betAmount)
+    public double PlayRound()
     {
+        double betAmount = player.DecideBet();
         ArgumentOutOfRangeException.ThrowIfNegative(betAmount);
         _payoutAmount = 0;
         
@@ -168,7 +169,7 @@ public class Dealer(Table table, Player player)
         }
         if (action is Actions.Surrender && _rules.AllowLateSurrender) return true;
         if (action is Actions.Split && table.GetCurrentHand().CanSplit()) return true;
-        throw new Exception("Invalid action");
+        return false;
     }
     
     //Game options

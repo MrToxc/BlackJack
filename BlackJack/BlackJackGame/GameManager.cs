@@ -12,10 +12,10 @@ public class GameManager
     public double Test()
     {
         double result = 0;
-        for (int i = 0; i < 500; i++)
+        for (int i = 0; i < 100000; i++)
         {
             Console.WriteLine(i);
-            result += _dealer.PlayRound(5);
+            result += _dealer.PlayRound();
         }
         return result;
     }

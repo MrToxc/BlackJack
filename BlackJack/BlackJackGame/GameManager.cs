@@ -9,10 +9,10 @@ public class GameManager
         _dealer = dealer;
     }
 
-    public double Test()
+    public double Test(int iterations)
     {
         double result = 0;
-        for (int i = 0; i < 100000; i++)
+        for (int i = 0; i < iterations; i++)
         {
             Console.WriteLine(i);
             result += _dealer.PlayRound();
